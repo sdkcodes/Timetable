@@ -21,11 +21,14 @@ public class TimetableSlot {
 		this.setDuration(duration);
 	}
 
-	public String toString() {
-		String str = name + " (" + id + "): ";
+	/**
+	 * Print details of this slot.
+	 */
+	public void print() {
+		String str = id + ": " + name + ", ";
 		str += day.getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + " ";
 		str += start.toString() + "-" + getFinish();
-		return str;
+		System.out.println(str);
 	}
 	
 	/**

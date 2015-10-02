@@ -33,12 +33,18 @@ public class Timetable {
 		this.slots.add(s);
 	}
 	
-	public String toString() {
-		String str = name + "\n";
+	/**
+	 * Print details of this timetable.
+	 */
+	public void print() {
+		System.out.println("##########################");
+		System.out.println("###### " + name + " ######");
+		System.out.println("###### List of Slots ######");
 		for (TimetableSlot s : slots) {
-			str += s.toString() + "\n";
+			s.print();
 		}
-		return str;
+		System.out.println("##########################");
+		System.out.println();
 	}
 
 }
