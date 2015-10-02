@@ -1,4 +1,5 @@
 
+
 public class TimetableSlot {
 	
 	private String name;
