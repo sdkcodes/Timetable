@@ -38,24 +38,24 @@ public class TimetableSlot {
 		if (module != null) {
 			str += module.getCode();
 		}
-		if (name != null && name != "") {
-			if (str != "") {
+		if (name != null && name.length() != 0) {
+			if (str.length() != 0) {
 				str += " ";
 			}
 			str += name;
 		}
 		if (type != UNSPECIFIED) {
-			if (str != "") {
+			if (str.length() != 0) {
 				str += " ";
 			}
 			str += getTypeString();
 		}
-		if (str != "") {
+		if (str.length() != 0) {
 			str += ", ";
 		}
 		str += day.getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + " ";
 		str += start.toString() + "-" + getFinish();
-		if (location != null && location != "") {
+		if (location != null && location.length() != 0) {
 			str += ", " + location;
 		}
 		System.out.println(str);

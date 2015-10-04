@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -41,6 +42,20 @@ public class Timetable {
 		return modules;
 	}
 	
+	public TimetableModule getModule(int m) {
+		if (m == 0) {
+			return null;
+		}
+		Iterator<TimetableModule> it = modules.iterator();
+		while (it.hasNext()) {
+			TimetableModule mod = it.next();
+			if (mod.getID() == m) {
+				return mod;
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * @param m the module to add
 	 */
@@ -61,6 +76,14 @@ public class Timetable {
 		this.modules.add(module);
 	}
 
+	/**
+	 * @param m the module to add
+	 */
+	public void addModule(int id, String code, String name, String contact) {
+		TimetableModule module = new TimetableModule(id, code, name, contact);
+		this.modules.add(module);
+	}
+	
 	/**
 	 * @return the list of slots
 	 */

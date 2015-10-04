@@ -6,7 +6,7 @@ import java.time.LocalTime;
 public class Main {
 
 	public static void main(String[] args) {
-
+		/*
 		Timetable t = new Timetable("myTimetable");
 		
 		t.addModule("CS210", "Computer Systems and Architecture", "Duncan Smeed");
@@ -19,6 +19,10 @@ public class Main {
 		t.print();
 		
 		TimetableFileManager.write(t, "myTimetable");
+		*/
+		
+		Timetable t = TimetableFileManager.read("myTimetable");
+		t.print();
 
 	}
 

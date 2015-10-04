@@ -17,7 +17,22 @@ public class TimetableModule {
 	 * Print details of this module.
 	 */
 	public void print() {
-		String str = id + ": " + code + " " + name + ", " + contact;
+		String str = id + ":";
+		boolean hasCodeOrName = false;
+		if (code != null && code.length() != 0) {
+			str += " " + code;
+			hasCodeOrName = true;
+		}
+		if (name != null && name.length() != 0) {
+			str += " " + name;
+			hasCodeOrName = true;
+		}
+		if (contact != null && contact.length() != 0) {
+			if (hasCodeOrName) {
+				str += ",";
+			}
+			str += " " + contact;
+		}
 		System.out.println(str);
 	}
 	
