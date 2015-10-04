@@ -55,6 +55,13 @@ public class Timetable {
 		TimetableModule module = new TimetableModule(id, code, name, contact);
 		this.modules.add(module);
 	}
+
+	/**
+	 * @return the list of slots
+	 */
+	public List<TimetableSlot> getSlots() {
+		return slots;
+	}
 	
 	/**
 	 * @param s the slot to add

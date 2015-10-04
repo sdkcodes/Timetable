@@ -17,6 +17,8 @@ public class Main {
 		t.addSlot(new TimetableSlot("One-off class", TimetableSlot.UNSPECIFIED, DayOfWeek.MONDAY, LocalTime.of(18, 0), Duration.ofMinutes(55), "RC667", null));
 		
 		t.print();
+		
+		TimetableFileManager.write(t, "myTimetable");
 
 	}
 

@@ -1,0 +1,7 @@
+myTimetable
+525080,CS210,Computer Systems and Architecture,Duncan Smeed
+628587,CS207,Advanced Programming,Isla Ross
+SLOTS
+Slot 1,1,FRIDAY,10:30,PT1H,JA317,525080
+,2,TUESDAY,12:00,PT2H30M,,628587
+One-off class,0,MONDAY,18:00,PT55M,RC667,
