@@ -14,6 +14,11 @@ public class Timetable {
 		this.modules = new ArrayList<>();
 		this.slots = new ArrayList<>();
 	}
+	
+	public Timetable() {
+		this.modules = new ArrayList<>();
+		this.slots = new ArrayList<>();
+	}
 
 	/**
 	 * @return the name
