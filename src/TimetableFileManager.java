@@ -9,17 +9,32 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 public class TimetableFileManager {
 
-	public static String NEWLINE = "\n";
+	private static String NEWLINE = "\n";
+	private static String MOD_MARKER = "MODS";
+	private static String SLOT_MARKER = "SLOTS";
+	private static String EOF_MARKER = "EOF";
 
 	public static void write(Timetable tt, String fileName) {
 		try {
 			FileWriter fw = new FileWriter(fileName + ".csv");
 			BufferedWriter writer = new BufferedWriter(fw);
-			String output = escape(tt.getName()) + NEWLINE;
+			String output = "";
+			Iterator<Entry<String, String>> itd = tt.getAllMeta().entrySet().iterator();
+			while (itd.hasNext()) {
+				Map.Entry<String, String> pair = itd.next();
+				ArrayList<String> values = new ArrayList<>();
+				values.add(pair.getKey());
+				values.add(pair.getValue());
+				output += encodeCSV(values);
+				output += NEWLINE;
+			}
+			output += MOD_MARKER + NEWLINE;
 			List<TimetableModule> modules = tt.getModules();
 			Iterator<TimetableModule> itm = modules.iterator();
 			while (itm.hasNext()) {
@@ -32,7 +47,7 @@ public class TimetableFileManager {
 				output += encodeCSV(values);
 				output += NEWLINE;
 			}
-			output += "SLOTS" + NEWLINE;
+			output += SLOT_MARKER + NEWLINE;
 			List<TimetableSlot> slots = tt.getSlots();
 			Iterator<TimetableSlot> its = slots.iterator();
 			while (its.hasNext()) {
@@ -52,7 +67,7 @@ public class TimetableFileManager {
 				output += encodeCSV(values);
 				output += NEWLINE;
 			}
-			output += "EOF";
+			output += EOF_MARKER;
 			writer.write(output);
 			writer.close();
 		} catch (IOException e) {
@@ -66,12 +81,21 @@ public class TimetableFileManager {
 			BufferedReader reader = new BufferedReader(fr);
 			Timetable tt = new Timetable();
 			Scanner s = new Scanner(reader);
-			tt.setName(unescape(s.nextLine()));
 			String l;
 			ArrayList<String> al = new ArrayList<>();
 			while (s.hasNextLine()) {
 				l = s.nextLine();
-				if (l.startsWith("SLOTS")) {
+				if (l.startsWith(MOD_MARKER)) {
+					break;
+				}
+				al = extractCSV(l);
+				String key = al.get(0);
+				String value = al.get(1);
+				tt.setMeta(key, value);
+			}
+			while (s.hasNextLine()) {
+				l = s.nextLine();
+				if (l.startsWith(SLOT_MARKER)) {
 					break;
 				}
 				al = extractCSV(l);
@@ -83,7 +107,7 @@ public class TimetableFileManager {
 			}
 			while (s.hasNextLine()) {
 				l = s.nextLine();
-				if (l.startsWith("EOF")) {
+				if (l.startsWith(EOF_MARKER)) {
 					break;
 				}
 				al = extractCSV(l);
