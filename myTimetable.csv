@@ -1,7 +1,8 @@
-myTimetable
-136097,CS210,Computer Systems and Architecture,Duncan Smeed
-252459,CS207,Advanced Programming,Isla Ross
+"myTimetable"
+"136097","CS210","Computer Systems and Architecture","Duncan Smeed"
+"252459","CS207","Advanced Programming","Isla Ross"
 SLOTS
-Slot 1,1,FRIDAY,10:30,PT1H,JA317,136097
-,2,TUESDAY,12:00,PT2H30M,,252459
-One-off class,0,MONDAY,18:00,PT55M,RC667,0
+"Slot 1","1","FRIDAY","10:30","PT1H","JA317","136097"
+"","2","TUESDAY","12:00","PT2H30M","","252459"
+"One-off class","0","MONDAY","18:00","PT55M","RC667","0"
+EOF

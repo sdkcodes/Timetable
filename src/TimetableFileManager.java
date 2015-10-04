@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -18,36 +19,40 @@ public class TimetableFileManager {
 		try {
 			FileWriter fw = new FileWriter(fileName + ".csv");
 			BufferedWriter writer = new BufferedWriter(fw);
-			String output = tt.getName() + NEWLINE;
+			String output = escape(tt.getName()) + NEWLINE;
 			List<TimetableModule> modules = tt.getModules();
 			Iterator<TimetableModule> itm = modules.iterator();
 			while (itm.hasNext()) {
 				TimetableModule m = itm.next();
-				output += m.getID() + ",";
-				output += m.getCode() + ",";
-				output += m.getName() + ",";
-				output += m.getContact() + NEWLINE;
+				ArrayList<String> values = new ArrayList<>();
+				values.add(Integer.toString(m.getID()));
+				values.add(m.getCode());
+				values.add(m.getName());
+				values.add(m.getContact());
+				output += encodeCSV(values);
+				output += NEWLINE;
 			}
 			output += "SLOTS" + NEWLINE;
 			List<TimetableSlot> slots = tt.getSlots();
 			Iterator<TimetableSlot> its = slots.iterator();
 			while (its.hasNext()) {
 				TimetableSlot s = its.next();
-				output += s.getName() + ",";
-				output += s.getType() + ",";
-				output += s.getDay().toString() + ",";
-				output += s.getStart().toString() + ",";
-				output += s.getDuration().toString() + ",";
-				output += s.getLocation() + ",";
+				ArrayList<String> values = new ArrayList<>();
+				values.add(s.getName());
+				values.add(Integer.toString(s.getType()));
+				values.add(s.getDay().toString());
+				values.add(s.getStart().toString());
+				values.add(s.getDuration().toString());
+				values.add(s.getLocation());
 				if (s.getModule() != null) {
-					output += s.getModule().getID();
+					values.add(Integer.toString(s.getModule().getID()));
 				} else {
-					output += 0;
+					values.add("0");
 				}
-				if (its.hasNext()) {
-					output += NEWLINE;
-				}
+				output += encodeCSV(values);
+				output += NEWLINE;
 			}
+			output += "EOF";
 			writer.write(output);
 			writer.close();
 		} catch (IOException e) {
@@ -61,25 +66,35 @@ public class TimetableFileManager {
 			BufferedReader reader = new BufferedReader(fr);
 			Timetable tt = new Timetable();
 			Scanner s = new Scanner(reader);
-			tt.setName(s.nextLine());
+			tt.setName(unescape(s.nextLine()));
 			String l;
-			String[] a;
+			ArrayList<String> al = new ArrayList<>();
 			while (s.hasNextLine()) {
 				l = s.nextLine();
-				if (l.equals("SLOTS")) {
+				if (l.startsWith("SLOTS")) {
 					break;
 				}
-				a = l.split(",");
-				tt.addModule(Integer.parseInt(a[0]), a[1], a[2], a[3]);
+				al = extractCSV(l);
+				int id = Integer.parseInt(al.get(0));
+				String code = al.get(1);
+				String name = al.get(2);
+				String contact = al.get(3);
+				tt.addModule(id, code, name, contact);
 			}
 			while (s.hasNextLine()) {
 				l = s.nextLine();
-				a = l.split(",");
-				System.out.println("l: " + l);
-				TimetableSlot slot = new TimetableSlot(a[0],
-						Integer.parseInt(a[1]), DayOfWeek.valueOf(a[2]),
-						LocalTime.parse(a[3]), Duration.parse(a[4]), a[5],
-						tt.getModule(Integer.parseInt(a[6])));
+				if (l.startsWith("EOF")) {
+					break;
+				}
+				al = extractCSV(l);
+				String name = al.get(0);
+				int type = Integer.parseInt(al.get(1));
+				DayOfWeek day = DayOfWeek.valueOf(al.get(2));
+				LocalTime start = LocalTime.parse(al.get(3));
+				Duration dur = Duration.parse(al.get(4));
+				String loc = al.get(5);
+				TimetableModule mod = tt.getModule(Integer.parseInt(al.get(6)));
+				TimetableSlot slot = new TimetableSlot(name, type, day, start, dur, loc, mod);
 				tt.addSlot(slot);
 			}
 			s.close();
@@ -89,5 +104,50 @@ public class TimetableFileManager {
 			System.out.println("Problem reading file " + fileName + ".csv.");
 			return null;
 		}
+	}
+	
+	private static String escape(String s) {
+		s = s.trim();
+		s = s.replace("\"", "\\\"");
+		return "\"" + s + "\"";
+	}
+	
+	private static String unescape(String s) {
+		s = s.trim();
+		if (s.length() == 0) {
+			return "";
+		}
+		s = s.substring(1, s.length() - 1);
+		s = s.replace("\\\"", "\"");
+		return s;
+	}
+	
+	private static ArrayList<String> extractCSV(String s) {
+		ArrayList<String> al = new ArrayList<>();
+		boolean inString = false;
+		int start = 0;
+		for (int i = 0; i < s.length(); i++) {
+			if (s.charAt(i) == '"') {
+				if (i == 0 || s.charAt(i - 1) != '\\') {
+					inString = !inString;
+				}
+			} 
+			if (s.charAt(i) == ',' && !inString) {
+				al.add(unescape(s.substring(start, i)));
+				start = i + 1;
+			}
+		}
+		al.add(unescape(s.substring(start)));
+		return al;
+	}
+	
+	private static String encodeCSV(ArrayList<String> al) {
+		String str = "";
+		ArrayList<String> escaped = new ArrayList<>();
+		for (String s : al) {
+			escaped.add(escape(s));
+		}
+		str = String.join(",", escaped);
+		return str;
 	}
 }
