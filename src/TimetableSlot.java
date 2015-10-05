@@ -4,14 +4,22 @@ import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
-
+/**
+ * The TimetableSlot class is used to create slots (or classes), consisting of a
+ * time (start time, duration, and day of the week) and information about the
+ * slot (name, type of class, location). Optionally this can be linked to a
+ * TimetableModule object.
+ * 
+ * @author R. David Dunphy
+ *
+ */
 public class TimetableSlot {
-	
-	public static int UNSPECIFIED = 0;
-	public static int LECTURE = 1;
-	public static int TUTORIAL = 2;
-	public static int PRACTICAL = 3;
-	
+
+	public static final int UNSPECIFIED = 0;
+	public static final int LECTURE = 1;
+	public static final int TUTORIAL = 2;
+	public static final int PRACTICAL = 3;
+
 	private String name;
 	private int type;
 	private DayOfWeek day;
@@ -19,8 +27,28 @@ public class TimetableSlot {
 	private Duration duration;
 	private String location;
 	private TimetableModule module;
-	
-	public TimetableSlot(String name, int type, DayOfWeek day, LocalTime start, Duration duration, String location, TimetableModule module) {
+
+	/**
+	 * Create a timetable slot from given parameters.
+	 * 
+	 * @param name
+	 *            the name of the class (may be "")
+	 * @param type
+	 *            the type of class (choose from static fields. default is
+	 *            UNSPECIFIED.)
+	 * @param day
+	 *            the day of the week this class is on
+	 * @param start
+	 *            the time the class starts
+	 * @param duration
+	 *            the duration of the class
+	 * @param location
+	 *            the location of the class (may be "")
+	 * @param module
+	 *            a module associated with this class (may be null)
+	 */
+	public TimetableSlot(String name, int type, DayOfWeek day, LocalTime start,
+			Duration duration, String location, TimetableModule module) {
 		this.setName(name);
 		this.setType(type);
 		this.setDay(day);
@@ -31,7 +59,7 @@ public class TimetableSlot {
 	}
 
 	/**
-	 * Print details of this slot.
+	 * Print details of this slot to the terminal as a String.
 	 */
 	public void print() {
 		String str = "";
@@ -60,7 +88,7 @@ public class TimetableSlot {
 		}
 		System.out.println(str);
 	}
-	
+
 	/**
 	 * @return the finish time, as calculated from start and duration
 	 */
@@ -76,12 +104,13 @@ public class TimetableSlot {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * @return the start
 	 */
@@ -90,7 +119,8 @@ public class TimetableSlot {
 	}
 
 	/**
-	 * @param start the start to set
+	 * @param start
+	 *            the start to set
 	 */
 	public void setStart(LocalTime start) {
 		this.start = start;
@@ -104,7 +134,8 @@ public class TimetableSlot {
 	}
 
 	/**
-	 * @param duration the duration to set
+	 * @param duration
+	 *            the duration to set
 	 */
 	public void setDuration(Duration duration) {
 		this.duration = duration;
@@ -118,7 +149,8 @@ public class TimetableSlot {
 	}
 
 	/**
-	 * @param day the day to set
+	 * @param day
+	 *            the day to set
 	 */
 	public void setDay(DayOfWeek day) {
 		this.day = day;
@@ -132,7 +164,8 @@ public class TimetableSlot {
 	}
 
 	/**
-	 * @param module the module to set
+	 * @param module
+	 *            the module to set (may be null)
 	 */
 	public void setModule(TimetableModule module) {
 		this.module = module;
@@ -144,7 +177,7 @@ public class TimetableSlot {
 	public int getType() {
 		return type;
 	}
-	
+
 	/**
 	 * @return the type as a String
 	 */
@@ -162,10 +195,15 @@ public class TimetableSlot {
 	}
 
 	/**
-	 * @param type the type to set
+	 * @param type
+	 *            the type to set (default UNSPECIFIED)
 	 */
 	public void setType(int type) {
-		this.type = type;
+		if (type != LECTURE && type != TUTORIAL && type != PRACTICAL) {
+			this.type = UNSPECIFIED;
+		} else {
+			this.type = type;
+		}
 	}
 
 	/**
@@ -176,7 +214,8 @@ public class TimetableSlot {
 	}
 
 	/**
-	 * @param location the location to set
+	 * @param location
+	 *            the location to set
 	 */
 	public void setLocation(String location) {
 		this.location = location;

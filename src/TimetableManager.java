@@ -5,8 +5,6 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
@@ -14,75 +12,119 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
-
+/**
+ * TimetableManager is the main class of the Timetable Manager application. This
+ * class opens and populates the main JFrame and interacts with the Timetable
+ * objects.
+ * 
+ * @author R. David Dunphy
+ * @version 1.0
+ *
+ */
 public class TimetableManager {
-	
-	public static String NAME = "Timetable Manager";
+
+	private static final String NAME = "Timetable Manager";
 	private static final String VERSION = "1.0";
 	private static final String AUTHOR = "David Dunphy";
 	private static final String ICON_PATH = "src/toolbarIcons/";
-	
+
+	private Timetable currentTimetable;
 	private JFrame frame;
-	
+
+	/**
+	 * Create and instance of TimetableManager and open the main frame.
+	 */
 	public TimetableManager() {
 		makeFrame();
 	}
-	
+
+	/**
+	 * Create a new timetable file.
+	 */
 	private void newFile() {
-		
+
 	}
-	
+
+	/**
+	 * Open an existing timetable file.
+	 */
 	private void openFile() {
-		
+		currentTimetable = TimetableFileManager.read("myTimetable");
+		currentTimetable.print();
 	}
-	
+
+	/**
+	 * Save the current timetable.
+	 */
 	private void saveFile() {
-		
+		TimetableFileManager.write(currentTimetable, "myTimetable");
 	}
-	
+
+	/**
+	 * Save the current timetable as a copy.
+	 */
 	private void saveFileAs() {
-		
+
 	}
-	
+
+	/**
+	 * Close the current timetable.
+	 */
 	private void closeFile() {
-		
+
 	}
-	
-	private void newModule() {
-		
-	}
-	
-	private void newSlot() {
-		
-	}
-	
-	private void showHelp() {
-		
-	}
-	
-	private void showAbout() {
-		
-	}
-	
+
+	/**
+	 * Exit the application after checking for unsaved changes.
+	 */
 	private void quit() {
+		// Check for unsaved changes!
 		System.exit(0);
 	}
 
+	/**
+	 * Create a new module in the current timetable.
+	 */
+	private void newModule() {
+
+	}
+
+	/**
+	 * Add a new slot to the current timetable.
+	 */
+	private void newSlot() {
+
+	}
+
+	/**
+	 * Show the help documentation.
+	 */
+	private void showHelp() {
+
+	}
+
+	/**
+	 * Display the About window.
+	 */
+	private void showAbout() {
+		JOptionPane.showMessageDialog(frame, NAME + " v" + VERSION
+				+ "\nCreated by " + AUTHOR, "About " + NAME,
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	/**
+	 * Set up the main JFrame, adding the menu and toolbar.
+	 */
 	private void makeFrame() {
 		frame = new JFrame(NAME);
 		frame.setMinimumSize(new Dimension(300, 200));
@@ -108,14 +150,14 @@ public class TimetableManager {
 		contentPane.add(timetablePane, BorderLayout.CENTER);
 
 		// building is done - arrange the components
-		//updateFrame();
-		//frame.pack();
+		// updateFrame();
+		// frame.pack();
 
 		// place the frame at the center of the screen and show
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setLocation(d.width / 2 - frame.getWidth() / 2, d.height / 2
 				- frame.getHeight() / 2);
-		
+
 		frame.setVisible(true);
 	}
 
@@ -123,7 +165,7 @@ public class TimetableManager {
 	 * Create the main frame's menu bar.
 	 * 
 	 * @param frame
-	 *            The frame that the menu bar should be added to.
+	 *            the frame that the menu bar should be added to.
 	 */
 	private void makeMenuBar(JFrame frame) {
 		JMenuBar menubar = new JMenuBar();
@@ -155,7 +197,7 @@ public class TimetableManager {
 			}
 		});
 		menu.add(item);
-		
+
 		menu.addSeparator();
 
 		item = new JMenuItem("Save");
@@ -167,7 +209,7 @@ public class TimetableManager {
 			}
 		});
 		menu.add(item);
-		
+
 		item = new JMenuItem("Save As...");
 		item.setMnemonic(KeyEvent.VK_A);
 		item.setAccelerator(KeyStroke.getKeyStroke("ctrl shift S"));
@@ -204,7 +246,7 @@ public class TimetableManager {
 		menu = new JMenu("Timetable");
 		menu.setMnemonic(KeyEvent.VK_T);
 		menubar.add(menu);
-		
+
 		item = new JMenuItem("New module...");
 		item.setMnemonic(KeyEvent.VK_M);
 		item.setAccelerator(KeyStroke.getKeyStroke("ctrl shift N"));
@@ -214,7 +256,7 @@ public class TimetableManager {
 			}
 		});
 		menu.add(item);
-		
+
 		item = new JMenuItem("New slot...");
 		item.setMnemonic(KeyEvent.VK_N);
 		item.setAccelerator(KeyStroke.getKeyStroke("ctrl N"));
@@ -253,12 +295,12 @@ public class TimetableManager {
 	/**
 	 * Create the toolbar with all the relevant buttons.
 	 * 
-	 * @return The toolbar.
+	 * @return the toolbar.
 	 */
 	private JToolBar makeToolbar() {
 		JToolBar toolbar = new JToolBar("Main Toolbar");
 		toolbar.setFloatable(false);
-		
+
 		JButton button;
 
 		button = createButton("Open");
@@ -289,14 +331,14 @@ public class TimetableManager {
 
 		return toolbar;
 	}
-	
 
 	/**
-	 * Create a JButton with the correct icon from a given name.
+	 * Create a JButton with the correct icon from the Java Look and Feel
+	 * toolbarIcons from a given name.
 	 * 
 	 * @param name
-	 *            The name of the icon.
-	 * @return The button.
+	 *            the name of the icon.
+	 * @return the button.
 	 */
 	private JButton createButton(String name) {
 		JButton button = new JButton();
@@ -315,5 +357,5 @@ public class TimetableManager {
 		}
 		return button;
 	}
-	
+
 }

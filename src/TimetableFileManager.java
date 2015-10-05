@@ -13,6 +13,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
+/**
+ * The TimetableFileManager class contains static methods for reading and
+ * writing CSV files representing Timetable objects.
+ * 
+ * @author R. David Dunphy
+ *
+ */
 public class TimetableFileManager {
 
 	private static String NEWLINE = "\n";
@@ -20,12 +27,21 @@ public class TimetableFileManager {
 	private static String SLOT_MARKER = "SLOTS";
 	private static String EOF_MARKER = "EOF";
 
+	/**
+	 * Encode a Timetable object as a CSV file and save it to a given file name.
+	 * 
+	 * @param tt
+	 *            the timetable object to encode
+	 * @param fileName
+	 *            the file name to save under (without extension)
+	 */
 	public static void write(Timetable tt, String fileName) {
 		try {
 			FileWriter fw = new FileWriter(fileName + ".csv");
 			BufferedWriter writer = new BufferedWriter(fw);
 			String output = "";
-			Iterator<Entry<String, String>> itd = tt.getAllMeta().entrySet().iterator();
+			Iterator<Entry<String, String>> itd = tt.getAllMeta().entrySet()
+					.iterator();
 			while (itd.hasNext()) {
 				Map.Entry<String, String> pair = itd.next();
 				ArrayList<String> values = new ArrayList<>();
@@ -75,6 +91,14 @@ public class TimetableFileManager {
 		}
 	}
 
+	/**
+	 * Read a CSV file representing a timetable and convert it to a Timetable
+	 * object.
+	 * 
+	 * @param fileName
+	 *            the name of the file to open
+	 * @return the timetable
+	 */
 	public static Timetable read(String fileName) {
 		try {
 			FileReader fr = new FileReader(fileName + ".csv");
@@ -118,7 +142,8 @@ public class TimetableFileManager {
 				Duration dur = Duration.parse(al.get(4));
 				String loc = al.get(5);
 				TimetableModule mod = tt.getModule(Integer.parseInt(al.get(6)));
-				TimetableSlot slot = new TimetableSlot(name, type, day, start, dur, loc, mod);
+				TimetableSlot slot = new TimetableSlot(name, type, day, start,
+						dur, loc, mod);
 				tt.addSlot(slot);
 			}
 			s.close();
@@ -129,13 +154,29 @@ public class TimetableFileManager {
 			return null;
 		}
 	}
-	
+
+	/**
+	 * A helper method to wrap Strings in double quotes and escape any double
+	 * quotes contained in them.
+	 * 
+	 * @param s
+	 *            the String to escape
+	 * @return the escaped String
+	 */
 	private static String escape(String s) {
 		s = s.trim();
 		s = s.replace("\"", "\\\"");
 		return "\"" + s + "\"";
 	}
-	
+
+	/**
+	 * A helper method to extract Strings from double quotes, unescaping any
+	 * double quotes contained in them.
+	 * 
+	 * @param s
+	 *            the String to unescape
+	 * @return the unescaped String
+	 */
 	private static String unescape(String s) {
 		s = s.trim();
 		if (s.length() == 0) {
@@ -145,7 +186,14 @@ public class TimetableFileManager {
 		s = s.replace("\\\"", "\"");
 		return s;
 	}
-	
+
+	/**
+	 * Takes a line from a CSV file and returns the values as an ArrayList.
+	 * 
+	 * @param s
+	 *            the line of CSV
+	 * @return the list of values
+	 */
 	private static ArrayList<String> extractCSV(String s) {
 		ArrayList<String> al = new ArrayList<>();
 		boolean inString = false;
@@ -155,7 +203,7 @@ public class TimetableFileManager {
 				if (i == 0 || s.charAt(i - 1) != '\\') {
 					inString = !inString;
 				}
-			} 
+			}
 			if (s.charAt(i) == ',' && !inString) {
 				al.add(unescape(s.substring(start, i)));
 				start = i + 1;
@@ -164,7 +212,14 @@ public class TimetableFileManager {
 		al.add(unescape(s.substring(start)));
 		return al;
 	}
-	
+
+	/**
+	 * Takes an ArrayList of values and encodes them as a line of CSV.
+	 * 
+	 * @param al
+	 *            the list of values
+	 * @return the line of CSV
+	 */
 	private static String encodeCSV(ArrayList<String> al) {
 		String str = "";
 		ArrayList<String> escaped = new ArrayList<>();
