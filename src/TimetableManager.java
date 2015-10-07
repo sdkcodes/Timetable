@@ -40,6 +40,7 @@ public class TimetableManager {
 
 	private Timetable currentTimetable;
 	private JFrame frame;
+	private JScrollPane timetablePane;
 
 	/**
 	 * Create and instance of TimetableManager and open the main frame.
@@ -60,7 +61,8 @@ public class TimetableManager {
 	 */
 	private void openFile() {
 		currentTimetable = TimetableFileManager.read("myTimetable");
-		currentTimetable.print();
+		//currentTimetable.print();
+		timetablePane.add(new TimetablePanel(currentTimetable, 300, 200));
 	}
 
 	/**
@@ -146,7 +148,7 @@ public class TimetableManager {
 
 		contentPane.add(makeToolbar(), BorderLayout.PAGE_START);
 
-		JScrollPane timetablePane = new JScrollPane();
+		timetablePane = new JScrollPane();
 		contentPane.add(timetablePane, BorderLayout.CENTER);
 
 		// building is done - arrange the components
